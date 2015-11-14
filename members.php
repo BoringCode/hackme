@@ -62,16 +62,20 @@
 
 <?php
 	$threads = mysql_query("SELECT * FROM threads ORDER BY date DESC")or die(mysql_error());
-	while($thisthread = mysql_fetch_array( $threads )){
+    while($thisthread = mysql_fetch_array( $threads )){
 ?>
 	<div class="post">
-	<div class="post-bgtop">
-	<div class="post-bgbtm">
-		<h2 class="title"><a href="show.php?pid=<? echo $thisthread[id] ?>"><? echo $thisthread[title]?></a></h2>
-							<p class="meta"><span class="date"> <? echo date('l, d F, Y',$thisthread[date]) ?> - Posted by <a href="#"><? echo $thisthread[username] ?> </a></p>
-
-	</div>
-	</div>
+		<div class="post-bgtop">
+			<div class="post-bgbtm">
+				<h2 class="title">
+					<a href="show.php?pid=<?php echo $thisthread["id"]; ?>"><?php echo $thisthread["title"]; ?>
+					</a>
+				</h2>
+				<p class="meta">
+					<span class="date"><?php echo date('l, d F, Y',$thisthread["date"]); ?></span> - Posted by <a href="#"><?php echo $thisthread["username"]; ?></a>
+				</p>
+			</div>
+		</div>
 	</div> 
 
 <?php

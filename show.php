@@ -32,26 +32,27 @@
 	while($thisthread = mysql_fetch_array( $threads )){
 ?>
 	<div class="post">
-	<div class="post-bgtop">
-	<div class="post-bgbtm">
-		<h2 class="title"><a href="show.php?pid=<? echo $thisthread[id] ?>"><? echo $thisthread[title]?></a></h2>
-							<p class="meta"><span class="date"> <? echo date('l, d F, Y',$thisthread[date]) ?> - Posted by <a href="#"><? echo $thisthread[username] ?> </a></p>
-         
-         <div class="entry">
-			
-            <? echo $thisthread[message] ?>
-            					
-		 </div>
-         
-	</div>
-	</div>
-	</div>
+		<div class="post-bgtop">
+			<div class="post-bgbtm">
+				<h2 class="title">
+					<a href="show.php?pid=<?php echo $thisthread["id"]; ?>"><?php echo $thisthread["title"]; ?>
+					</a>
+				</h2>
+				<p class="meta">
+					<span class="date"><?php echo date('l, d F, Y',$thisthread["date"]); ?></span> - Posted by <a href="#"><?php echo $thisthread["username"]; ?></a>
+				</p>
+				<div class="entry">
+					<?php echo $thisthread["message"]; ?>
+				</div>
+			</div>
+		</div>
+	</div> 
     
     <?php
-		if ($_COOKIE[hackme] == $thisthread[username])
+		if ($_COOKIE[hackme] == $thisthread["username"])
 		{
 	?>
-    	<a href="show.php?delpid=<? echo $thisthread[id]?>">DELETE</a>
+    	<a href="show.php?delpid=<?php echo $thisthread["id"]?>">DELETE</a>
     <?php
 		}
 	?> 
