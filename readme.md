@@ -10,4 +10,4 @@ How the system initally looked can be viewed on the very first commit of this re
 
 You can read the writeup in [project-essay.md](project-essay.md)
 
-(note: some of the specific examples are hosted on a local Taylor University IP, so they cannot be viewed)
+*(Note: some of the specific examples are hosted on a local Taylor University IP, so they cannot be viewed)*

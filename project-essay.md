@@ -1,9 +1,7 @@
 # Project Writeup
 
 Bradley Rosenfeld
-
 COS342
-
 11/14/15
 
 ## Part 1.
