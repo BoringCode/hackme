@@ -4,6 +4,8 @@ Bradley Rosenfeld - COS342, 11/14/15
 
 ## Part 1.
 
+Overall this application was extremely vulnerable to all sorts of different attacks. Malicious users could run arbitrary SQL queries as well as insert XSS attacks into posts. I outlined below my response to the specific security policies laid out in the assignment.
+
 1. The application tries to prevent access to messages by checking for the existence of a cookie that is created when the user is authenticated and logged in. Messages can be deleted by visiting a GET URL, the link to which is only visible when the user who is viewing the message has a cookie that matches the user who created the message. Even worse, the deletion action is vulnerable to SQL injection which would allow any user to delete any post or worse.
 
  Unfortunately, these security policies are not adequate to prevent unauthorized access. Malicious users can easily create a cookie called "hackme" which contains the username which they wish to target. The actual message deletion action doesn't check to see if the user is authorized, anyone can enter an arbitrary message ID which they wish to delete. 
@@ -11,6 +13,8 @@ Bradley Rosenfeld - COS342, 11/14/15
  In order to fix this I implemented PHP sessions. Rather than sending the actual username and password as a cookie, a unique session ID is set which an attacker wouldn't be able to guess (they could snoop for it, but that is addressed later). The application then checks for the existence of the session ID and makes sure it is valid. Similarly, the deletion action will check to make sure the user is actually authorized and that the ID provided is valid.
 
 2. The database only contains password hashes. The passwords are not hashed with a strong algorithm and they are not salted resulting in duplication of hashes.
+
+ I fixed this by moving to a newer PHP function `password_hash()` which uses a much strong hashing function, handles salting, and enforces a "cost" which slows down direct brute force attacks on the server.
 
 3. Attackers can easily snoop for user credentials for multiple reasons. Since the site is not HTTPS, usernames and passwords are sent via plaintext over the network. Furthermore, the username and hashed password are stored in cookies which are sent with every network request. It would be trivial to snoop for credentials.
 
@@ -23,6 +27,9 @@ Bradley Rosenfeld - COS342, 11/14/15
 5. No password scheme was implemented, users could submit anything as a password.
  
  I implemented a password policy that says passwords must be at least 8 characters long, aren't dictionary words, and don't have too many letters, numbers, or special characters (must be a combination). This policy is enforced by my PHP Password class in the check() method.
+
+
+I also solved a lot of the possible SQL injection attacks on the website by using `mysqli_real_escape_string()`. This function automatically escapes quotes and other special characters preventing attackers from running their own commands.
 
 ## Part 2
 
