@@ -12,15 +12,17 @@ Bradley Rosenfeld - COS342, 11/14/15
 
 2. The database only contains password hashes. The passwords are not hashed with a strong algorithm and they are not salted resulting in duplication of hashes.
 
-3. Attackers can easily snoop for user credentials for multiple reasons. Since the site is not HTTPS, usernames and passwords are sent via plantext over the network. Furthermore, the username and hashed password are stored in cookies which are sent with every network request. It would be trivial to snoop for credentials.
+3. Attackers can easily snoop for user credentials for multiple reasons. Since the site is not HTTPS, usernames and passwords are sent via plaintext over the network. Furthermore, the username and hashed password are stored in cookies which are sent with every network request. It would be trivial to snoop for credentials.
 
  To fully fix this, I would need to enable HTTPS. But I did stop saving the username and password in a cookie. Instead I use a unique PHP session ID for further authentication.
 
-4. Login attempts are not rate limited, making brute force attacks trival.
+4. Login attempts are not rate limited, making brute force attacks trivial.
  
- I fixed this by slowing down the number of attempts allowed per minute on a user.
+ I fixed this by slowing down the number of attempts allowed per minute on a user. Once the user has exceeded 5 attempts, they have to wait a minute before trying again.
 
 5. No password scheme was implemented, users could submit anything as a password.
+ 
+ I implemented a password policy that says passwords must be at least 8 characters long, aren't dictionary words, and don't have too many letters, numbers, or special characters (must be a combination). This policy is enforced by my PHP Password class in the check() method.
 
 ## Part 2
 

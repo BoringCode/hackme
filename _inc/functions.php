@@ -110,6 +110,10 @@ class Password {
 
 /* Handle site authentication and database operations */
 class SiteAuthentication {
+	//Only allow a certain number of attempts per minute
+	const MAX_ATTEMPTS = 5;
+	const TIME_RANGE = 60;
+
 	//Site database
 	private $DB;
 
@@ -165,16 +169,36 @@ class SiteAuthentication {
 		$username = $this->escape(trim($username));
 		$password = $this->escape(trim($password));
 
-		$hash = $this->query("SELECT pass FROM users WHERE username = '%s'", array($username));
+		$result = $this->query("SELECT pass, last_attempt, attempts FROM users WHERE username = '%s'", array($username));
 
-		if (count($hash) === 0) return false;
+		if (count($result) === 0) return false;
 
 		$password = new Password($password);
 
-		if (!$password->verify($hash[0]->pass)) return false;
+		//Rate limit password guesses per minute
+		//Once the user has guessed 5 times, they have to wait a minute before trying again
+		$attempt_time = time();
+		$attempts = (int) $result[0]->attempts;
+		//Reset attempt counter if user hasn't attempted in last minute
+		if ($attempt_time > ($result[0]->last_attempt + self::TIME_RANGE)) {
+			$attempts = 0;
+		}
+		$attempts++;
+
+		//User has exceeded max number of attempts in last minute
+		if ($attempts > self::MAX_ATTEMPTS) return false;
+
+		//Update user with attempt count and current time
+		$this->query("UPDATE users SET last_attempt = '%d', attempts = '%d' WHERE username = '%s'", array(
+			$attempt_time,
+			$attempts,
+			$username
+		));
+
+		if (!$password->verify($result[0]->pass)) return false;
 
 		$_SESSION["username"] = $username;
-		$_SESSION["login_time"] = time();
+		$_SESSION["login_time"] = $attempt_time;
 
 		$this->logged_in = true;
 
