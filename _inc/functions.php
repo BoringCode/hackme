@@ -5,27 +5,106 @@ class Password {
 	const COST = 14;
 	const HASH = PASSWORD_DEFAULT;
 
+	private $dictionary = "/usr/share/dict/words";
+
 	private $hash;
 
 	private $password;
 
+	/* 
+	 * Constructor
+	 * Creates and hashes a given password
+	 * $password string
+	 */
 	public function __construct($password) {
-		$this->password = $password;
+		$this->password = trim($password);
 		$this->hash($this->password);
 	}
 
+	/*
+	 * hash()
+	 * Generates a salted and hashed password
+	 * $password string, password to hash
+	 */
 	public function hash($password) {
 		$this->hash = password_hash($password, self::HASH, ['cost' => self::COST]);
 
 		return $this->hash;
 	}
 
+	/*
+	 * getHash()
+	 * Returns the hashed password
+	 */
 	public function getHash() {
 		return $this->hash;
 	}
 
+	/*
+	 * verify()
+	 * Matches password to a given hash
+	 * @return bool
+	 */
 	public function verify($hash) {
 		return password_verify($this->password, $hash);
+	}
+
+
+	/* 
+	 * check()
+	 * Checks if password matches password requirements
+	 */
+	public function check() {
+		$length = strlen($this->password);
+
+		//Password is too short
+		if ($length < 8) return false;
+
+		// count how many lowercase, uppercase, and digits are in the password 
+	    $uc = 0; $lc = 0; $num = 0; $other = 0;
+	    for ($i = 0; $i < $length; $i++) {
+	        $c = substr($this->password, $i, 1);
+	        if (preg_match('/^[[:upper:]]$/',$c)) {
+	            $uc++;
+	        } elseif (preg_match('/^[[:lower:]]$/',$c)) {
+	            $lc++;
+	        } elseif (preg_match('/^[[:digit:]]$/',$c)) {
+	            $num++;
+	        } else {
+	            $other++;
+	        }
+	    }
+
+	    //Enforce at least two types of characters
+	    $max = $length - 2;
+
+	    //Too many uppercase letters
+	    if ($uc > $max) return false;
+
+	    //Too many lowercase letters
+	    if ($lc > $max) return false;
+
+	    //Too many numbers
+	    if ($num > $max) return false;
+
+	    //Too many special characters
+	    if ($other > $max) return false;
+
+	    //Check that password is not a dictionary word
+	    if (is_readable($this->dictionary)) {
+	        if ($fh = fopen($this->dictionary, 'r')) {
+	            while (!(feof($fh))) {
+	                $word = preg_quote(trim(strtolower(fgets($fh, 1024))), '/');
+	                if ($word === strtolower($this->password)) {
+	                	echo $word;
+	            		fclose($fh);
+	                	return false;
+	                }
+	            }
+	        }
+	    }
+
+		return true;
 	}
 }
 
@@ -139,12 +218,15 @@ class SiteAuthentication {
 		if (!$this->DB) return false;
 		if (!$username || !$password || !$firstName || !$lastName) return false;
 
+		$password = new Password($password);
+
+		//Bad password
+		if (!$password->check()) return false;
+
 		$users = $this->query("SELECT username FROM users WHERE username = '%s'", array($username));
 
 		//User already exists
 		if (count($users) > 0) return false;
-
-		$password = new Password($password);
 
 		$createUser = $this->query("INSERT INTO users (username, pass, fname, lname) VALUES ('%s', '%s', '%s', '%s')", array(
 			htmlspecialchars($username), 

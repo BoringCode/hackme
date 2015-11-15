@@ -39,6 +39,14 @@ require("_inc/header.php");
                 <tr>
                     <td> Password </td>
                     <td> <input type="password" name="password" maxlength="40" /> </td>
+                    <td>
+                        <em>Password must match requirements</em>
+                        <ul>
+                            <li>Must be at least 8 characters</li>
+                            <li>Must not be a dictionary word</li>
+                            <li>Password cannot be primarily letters, numbers, or special characters (must be a combination of them)</li>
+                        </ul>
+                    </td>
                 </tr>
                 <tr>
                     <td> First Name </td>

@@ -397,7 +397,14 @@ hr {
 	color: #666666;
 }
 
+
+table td {
+	vertical-align: top;
+	padding-bottom: 20px;
+}
+
 /* Calendar */
+
 
 #calendar {
 }
