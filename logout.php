@@ -1,5 +1,7 @@
 <?php
-setcookie (hackme, "", time() - 3600);
-setcookie(hackme_pass, "", time() - 3600);
+require("_inc/functions.php");
+
+if ($auth->logged_in) $auth->logout();
+
 header("Location: index.php");
 ?>

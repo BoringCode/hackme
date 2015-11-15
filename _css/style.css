@@ -1,7 +1,7 @@
 body {
 	margin: 20px 0px 0px 0px;
 	padding: 0;
-	background: #191919 url(images/img07.jpg) no-repeat right top;
+	background: #191919 url(../images/img07.jpg) no-repeat right top;
 	font-family: Tahoma, Geneva, sans-serif;
 	font-size: 11px;
 	color: #3C3C3C;
@@ -166,7 +166,7 @@ hr {
 	height: 28px;
 	padding: 6px 0 0 7px;
 	border: none;
-	background: url(images/img02.jpg) no-repeat left top;
+	background: url(../images/img02.jpg) no-repeat left top;
 	color: #000000;
 }
 
@@ -254,23 +254,23 @@ hr {
 /* Post */
 
 .post {
-	background: url(images/img05.jpg) repeat-y left top;
+	background: url(../images/img05.jpg) repeat-y left top;
 }
 
 .post-bgtop {
-	background: url(images/img04.jpg) no-repeat left top;
+	background: url(../images/img04.jpg) no-repeat left top;
 }
 
 .post-bgbtm {
 	padding: 0px 30px 20px 30px;
-	background: url(images/img06.jpg) no-repeat left bottom;
+	background: url(../images/img06.jpg) no-repeat left bottom;
 }
 
 .post .title {
 	height: 44px;
 	margin: 0px;
 	padding: 36px 0px 0px 0px;
-	background: url(images/img11.jpg) repeat-x left bottom;
+	background: url(../images/img11.jpg) repeat-x left bottom;
 	
 	letter-spacing: -2px;
 	text-transform: lowercase;
@@ -345,20 +345,20 @@ hr {
 }
 
 #sidebar li {
-	background: url(images/img09.jpg) repeat-y left top;
+	background: url(../images/img09.jpg) repeat-y left top;
 }
 
 #sidebar li ul {
 	margin: 0px 0px;
 	padding: 0px 0px 20px 0px;
-	background: url(images/img10.jpg) no-repeat left bottom;
+	background: url(../images/img10.jpg) no-repeat left bottom;
 }
 
 #sidebar li li {
 	margin: -20px 30px 20px 30px;
 	padding: 8px 0px 8px 10px;
 	border-bottom: 1px solid #E0E0E0;
-	background: url(images/img12.jpg) no-repeat left 13px;
+	background: url(../images/img12.jpg) no-repeat left 13px;
 }
 
 #sidebar li li a {
@@ -378,7 +378,7 @@ hr {
 	height: 50px;
 	margin: 0px;
 	padding: 30px 0px 13px 30px;
-	background: url(images/img08.jpg) no-repeat left top;
+	background: url(../images/img08.jpg) no-repeat left top;
 	letter-spacing: -1px;
 	text-transform: lowercase;
 	font-size: 24px;
