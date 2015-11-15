@@ -114,12 +114,13 @@ class SiteAuthentication {
 	const MAX_ATTEMPTS = 5;
 	const TIME_RANGE = 60;
 
+	//Database information
+	const DBUser = "security-project";
+	const DBPassword = "69BgYftvzpEH";
+	const DBName = "hackme";
+
 	//Site database
 	private $DB;
-
-	private $DBUser = "security-project";
-	private $DBPassword = "69BgYftvzpEH";
-	private $DBName = "hackme";
 
 	public $logged_in = false;
 
@@ -145,7 +146,7 @@ class SiteAuthentication {
 		//Don't allow making the DB again
 		if (isset($this->DB)) return $this->DB;
 
-		$this->DB = new mysqli("localhost", $this->DBUser, $this->DBPassword, $this->DBName);
+		$this->DB = new mysqli("localhost", self::DBUser, self::DBPassword, self::DBName);
 
 		if ($this->DB->connect_errno) {
 			die($this->DB->connect_error);
