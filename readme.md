@@ -1,13 +1,15 @@
 #Hackme
 
-Welcome to hackme, an information security exercise for COS342.
+Welcome to hackme, an information security exercise for COS342 (Fall 2015) at Taylor University.
 
 For this project, I was given some dangerously bad code and instructed to fix it as well as do a writeup on what types of attacks would be possible with this code.
 
-How the system initally looked can be viewed on the very first commit of this repository.
+You can see how the system initially looked in the very first commit.
+
+Please be warned that this **is not production code** and should only be used as an exercise in securing a web application. I may have missed stuff, and there are certainly some code style things I would like to fix (if I had time.)
 
 ##Writeup
 
 You can read the writeup in [project-essay.md](project-essay.md)
 
-*(Note: some of the specific examples are hosted on a local Taylor University IP, so they cannot be viewed)*
+*(Note: some of the specific examples are hosted on the local Taylor University network, so they cannot be viewed)*
