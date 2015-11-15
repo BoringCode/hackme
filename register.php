@@ -1,6 +1,11 @@
 <?php
 require("_inc/functions.php");
 
+//Redirect to members page if logged in
+if ($auth->logged_in) {
+    header("Location: members.php");
+}
+
 if (isset($_POST['submit'])) {
     
     if(!isset($_POST['uname']) || !isset($_POST['password']) || !isset($_POST['fname']) || !isset($_POST['lname'])) {
