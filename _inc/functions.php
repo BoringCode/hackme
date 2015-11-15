@@ -91,18 +91,18 @@ class Password {
 	    if ($other > $max) return false;
 
 	    //Check that password is not a dictionary word
-	    if (is_readable($this->dictionary)) {
-	        if ($fh = fopen($this->dictionary, 'r')) {
-	            while (!(feof($fh))) {
-	                $word = preg_quote(trim(strtolower(fgets($fh, 1024))), '/');
-	                if ($word === strtolower($this->password)) {
-	                	echo $word;
-	            		fclose($fh);
-	                	return false;
-	                }
-	            }
-	        }
-	    }
+		if (is_readable($this->dictionary)) {
+		    if ($fh = fopen($this->dictionary, 'r')) {
+		        while (!(feof($fh))) {
+		            $word = preg_quote(trim(strtolower(fgets($fh, 1024))), '/');
+		            if ($word === strtolower($this->password)) {
+		            	echo $word;
+		        		fclose($fh);
+		            	return false;
+		            }
+		        }
+		    }
+		}
 
 		return true;
 	}
