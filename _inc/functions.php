@@ -129,15 +129,43 @@ class SiteAuthentication {
 	}
 
 	/*
+	 * createUser()
+	 * $username string, Username for new user
+	 * $password string, Password to be hashed and stored in DB
+	 * $firstName string, First name of user
+	 * $lastName string, Last name of user
+	 */
+	public function createUser($username, $password, $firstName, $lastName) {
+		if (!$this->DB) return false;
+		if (!$username || !$password || !$firstName || !$lastName) return false;
+
+		$users = $this->query("SELECT username FROM users WHERE username = '%s'", array($username));
+
+		//User already exists
+		if (count($users) > 0) return false;
+
+		$password = new Password($password);
+
+		$createUser = $this->query("INSERT INTO users (username, pass, fname, lname) VALUES ('%s', '%s', '%s', '%s')", array(
+			htmlspecialchars($username), 
+			$password->getHash(),
+			htmlspecialchars($firstName),
+			htmlspecialchars($lastName)
+		));
+
+		return $createUser;
+	}
+
+	/*
 	 * query()
 	 * $query string, MySQL query string with parametrized values
 	 * $values array, Array of values to insert into query string
 	 * $require_login bool, Whether this query should require the user to be logged in
 	 */
 	public function query($query, $values = array(), $require_login = false) {
-		if (!$this->DB) return false;
-		if ($require_login && !$this->logged_in) return false;
-		if (!isset($query)) return false;
+		if (!$this->DB) return array();
+		if ($require_login && !$this->logged_in) return array();
+		if (!isset($query)) return array();
 
 		//Make sure all values are properly escaped
 		$values = array_map(array($this, "escape"), $values);
@@ -146,11 +174,14 @@ class SiteAuthentication {
 
 		//Get the results of the query
 		if ($result = $this->DB->query($statement)) {
-			$rows = array();
-			while ($row = $result->fetch_object()) {
-				$rows[] = $row;
+			$rows = true;
+			if (isset($result->num_rows)) {
+				$rows = array();
+				while ($row = $result->fetch_object()) {
+					$rows[] = $row;
+				}				
+				$result->close();
 			}
-			$result->close();
 			return $rows;
 		}
 

@@ -6,17 +6,20 @@ require("_inc/functions.php");
 //if the login form is submitted 
 if (!isset($_GET['pid'])) {
 	
-	if (isset($_GET['delpid'])){
-		mysql_query("DELETE FROM threads WHERE id = '".$_GET[delpid]."'") or die(mysql_error());
+	//Handle thread deletion
+	if (isset($_GET['delpid'])) {
+		$auth->query("DELETE FROM threads WHERE id = '%d' AND username = '%s'", array($_GET["delpid"], $_SESSION["username"]), true);
 	}
-		header("Location: members.php");
+	
+	header("Location: members.php");
 }
 
 require("_inc/header.php");
 ?> 
 
 <?php
-	$threads = $auth->query("SELECT * FROM threads ORDER BY date DESC", array(), true);
+	$threads = $auth->query("SELECT * FROM threads WHERE id = '%d' ORDER BY date DESC", array($_GET["pid"]), true);
+	if (count($threads) === 0) echo "No thread found matching this ID"; 
     foreach($threads as $thread) :
 ?>
 	<div class="post">

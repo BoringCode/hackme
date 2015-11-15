@@ -9,11 +9,9 @@ if (isset($_POST['submit']) && isset($_POST["password"]) && isset($_POST["userna
 }
 
 require("_inc/header.php");
-?>  
 
-<?php
-	$threads = $auth->query("SELECT * FROM threads ORDER BY date DESC", array(), true);
-    foreach($threads as $thread) :
+$threads = $auth->query("SELECT * FROM threads ORDER BY date DESC", array(), true);
+foreach($threads as $thread) :
 ?>
 	<div class="post">
 		<div class="post-bgtop">

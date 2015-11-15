@@ -1,50 +1,37 @@
-<?php
-// Connects to the Database 
-	include('connect.php');
-	connect();
-	
-	//if the login form is submitted 
-	if (isset($_POST['post_submit'])) {
-		
-		$_POST['title'] = trim($_POST['title']);
-		if(!$_POST['title'] | !$_POST['message']) {
-			include('header.php');
-			die('<p>You did not fill in a required field.
-			Please go back and try again!</p>');
-		}
-		
-		mysql_query("INSERT INTO threads (username, title, message, date) VALUES('".$_COOKIE['hackme']."', '". $_POST['title']."', '". $_POST[message]."', '".time()."')")or die(mysql_error());
-		
-		//mysql_query("INSERT INTO threads (username, title, message, date) VALUES('".$_COOKIE['hackme']."', '". $_POST['title']."', '". $_POST[message]."', CURDATE() )")or die(mysql_error());
-		
-		
-		header("Location: members.php");
+<?php 
+define("MEMBERS_ONLY", true);
+
+require("_inc/functions.php");
+
+//if the login form is submitted 
+if (isset($_POST['post_submit'])) {
+	if(!isset($_POST['title']) || !isset($_POST['message'])) {
+		die('<p>You did not fill in a required field.
+		Please go back and try again!</p>');
 	}
-?>  
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>hackme</title>
-<link href="style.css" rel="stylesheet" type="text/css" media="screen" />
-<?php
-	include('header.php');
-?>
+	
+	$title = htmlspecialchars(trim($_POST["title"]));
+	$message = htmlspecialchars(trim($_POST["message"]));
+
+	$auth->query("INSERT INTO threads (username, title, message, date) VALUES('%s', '%s', '%s', '%d')", array(
+		$_SESSION["username"],
+		$title,
+		$message,
+		time()
+	), true);
+	
+	header("Location: members.php");
+}
+
+
+require("_inc/header.php");
+?> 
+
 <div class="post">
 	<div class="post-bgtop">
-		<div class="post-bgbtm">
-        <h2 class = "title">hackme bulletin board</h2>
-        	<?php
-            if(!isset($_COOKIE['hackme'])){
-				 die('Why are you not logged in?!');
-			}else
-			{
-				print("<p>Logged in as <a>$_COOKIE[hackme]</a></p>");
-			}
-			?>
-            
+		<div class="post-bgbtm">            
             <h2 class="title">NEW POST</h2>
-            <p class="meta">by <a href="#"><? echo $_COOKIE['hackme'] ?> </a></p>
+            <p class="meta">by <a href="#"><?php echo $_SESSION["username"]; ?> </a></p>
             <p> do not leave any fields blank... </p>
             
             <form method="post" action="post.php">
@@ -62,9 +49,4 @@
         </div>
     </div>
 </div>
-
-<?php
-	include('footer.php');
-?>
-</body>
-</html>
+<?php require("_inc/footer.php"); ?>
