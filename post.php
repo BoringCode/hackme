@@ -3,8 +3,15 @@ define("MEMBERS_ONLY", true);
 
 require("_inc/functions.php");
 
+$nonce = new Nonce("post_action");
+
 //if the login form is submitted 
 if (isset($_POST['post_submit'])) {
+
+	if (!isset($_POST["nonce"]) || !$nonce->verify($_POST["nonce"])) {
+		die("CSRF detected, knock it off you punk");
+	}
+
 	if(!isset($_POST['title']) || !isset($_POST['message'])) {
 		die('<p>You did not fill in a required field.
 		Please go back and try again!</p>');
@@ -33,7 +40,6 @@ require("_inc/header.php");
             <h2 class="title">NEW POST</h2>
             <p class="meta">by <a href="#"><?php echo $_SESSION["username"]; ?> </a></p>
             <p> do not leave any fields blank... </p>
-            
             <form method="post" action="post.php">
             Title: <input type="text" name="title" maxlength="50"/>
             <br />
@@ -44,6 +50,7 @@ require("_inc/header.php");
             <textarea name="message" cols="120" rows="10" id="message"></textarea>
             <br />
             <br />
+            <input type="hidden" name="nonce" value="<?php echo $nonce->get(); ?>">
             <input name="post_submit" type="submit" id="post_submit" value="POST" />
             </form>
         </div>

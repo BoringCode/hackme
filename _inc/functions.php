@@ -1,5 +1,69 @@
 <?php
 
+/**
+ * Simple nonce class
+ */
+class Nonce {
+	private $name;
+
+	private $nonce;
+
+	/**
+	 * constructor()
+	 * @param string $name, allows multiple nonces for different actions
+	 */
+	public function __construct($name = "hackme_nonce") {
+		if (!isset($_SESSION)) die("Can't create nonce");
+
+		$this->name = $name;
+
+		//Can only create and use one nonce at a time
+		if (isset($_SESSION["_nonce_" . $this->name])) {
+			$this->nonce = $_SESSION["_nonce_" . $this->name];
+		} else {
+			$this->nonce = hash('sha512', $this->randomString());
+			$_SESSION["_nonce_" . $this->name] = $this->nonce;
+		}
+	}
+
+	/**
+	 * get()
+	 * @return string
+	 */
+	public function get() {
+		return $this->nonce;
+	}
+
+	/**
+	 * verify()
+	 * Makes sure nonce hasn't been used and that it is valid
+	 * @param string $nonce, user submitted nonce
+	 * @return bool
+	 */
+	public function verify($nonce) {
+		if (!isset($_SESSION) || !isset($_SESSION["_nonce_" . $this->name])) return false;
+		//Remove nonce, can only be used once
+		unset($_SESSION["_nonce_" . $this->name]);
+		//Compare two hashes
+		return hash_equals($this->nonce, $nonce);
+	}
+
+	/**
+	 * randomString()
+	 * Generates random string to create nonce hash
+	 * @param $bits, size of string to generate
+	 * @return string
+	 */
+	private function randomString($bits = 256) {
+		$bytes = ceil($bits / 8);
+		$return = '';
+		for ($i = 0; $i < $bytes; $i++) {
+			$return .= chr(mt_rand(0, 255));
+		} 
+		return $return;
+	}
+}
+
 /* A simple wrapper for the PHP password functions */
 class Password {
 	const COST = 14;
@@ -61,47 +125,47 @@ class Password {
 		if ($length < 8) return false;
 
 		// count how many lowercase, uppercase, and digits are in the password 
-	    $uc = 0; $lc = 0; $num = 0; $other = 0;
-	    for ($i = 0; $i < $length; $i++) {
-	        $c = substr($this->password, $i, 1);
-	        if (preg_match('/^[[:upper:]]$/',$c)) {
-	            $uc++;
-	        } elseif (preg_match('/^[[:lower:]]$/',$c)) {
-	            $lc++;
-	        } elseif (preg_match('/^[[:digit:]]$/',$c)) {
-	            $num++;
-	        } else {
-	            $other++;
-	        }
-	    }
+		$uc = 0; $lc = 0; $num = 0; $other = 0;
+		for ($i = 0; $i < $length; $i++) {
+			$c = substr($this->password, $i, 1);
+			if (preg_match('/^[[:upper:]]$/',$c)) {
+				$uc++;
+			} elseif (preg_match('/^[[:lower:]]$/',$c)) {
+				$lc++;
+			} elseif (preg_match('/^[[:digit:]]$/',$c)) {
+				$num++;
+			} else {
+				$other++;
+			}
+		}
 
 	    //Enforce at least two types of characters
-	    $max = $length - 2;
+		$max = $length - 2;
 
 	    //Too many uppercase letters
-	    if ($uc > $max) return false;
+		if ($uc > $max) return false;
 
 	    //Too many lowercase letters
-	    if ($lc > $max) return false;
+		if ($lc > $max) return false;
 
 	    //Too many numbers
-	    if ($num > $max) return false;
+		if ($num > $max) return false;
 
 	    //Too many special characters
-	    if ($other > $max) return false;
+		if ($other > $max) return false;
 
 	    //Check that password is not a dictionary word
 		if (is_readable($this->dictionary)) {
-		    if ($fh = fopen($this->dictionary, 'r')) {
-		        while (!(feof($fh))) {
-		            $word = preg_quote(trim(strtolower(fgets($fh, 1024))), '/');
-		            if ($word === strtolower($this->password)) {
-		            	echo $word;
-		        		fclose($fh);
-		            	return false;
-		            }
-		        }
-		    }
+			if ($fh = fopen($this->dictionary, 'r')) {
+				while (!(feof($fh))) {
+					$word = preg_quote(trim(strtolower(fgets($fh, 1024))), '/');
+					if ($word === strtolower($this->password)) {
+						echo $word;
+						fclose($fh);
+						return false;
+					}
+				}
+			}
 		}
 
 		return true;
@@ -194,7 +258,7 @@ class SiteAuthentication {
 			$attempt_time,
 			$attempts,
 			$username
-		));
+			));
 
 		if (!$password->verify($result[0]->pass)) return false;
 
@@ -217,11 +281,11 @@ class SiteAuthentication {
 
 		//Get rid of all user session cookies
 		if (ini_get("session.use_cookies")) {
-		    $params = session_get_cookie_params();
-		    setcookie(session_name(), '', time() - 42000,
-		        $params["path"], $params["domain"],
-		        $params["secure"], $params["httponly"]
-		    );
+			$params = session_get_cookie_params();
+			setcookie(session_name(), '', time() - 42000,
+				$params["path"], $params["domain"],
+				$params["secure"], $params["httponly"]
+				);
 		}
 
 		// Finally, destroy the session.
@@ -258,7 +322,7 @@ class SiteAuthentication {
 			$password->getHash(),
 			htmlspecialchars($firstName),
 			htmlspecialchars($lastName)
-		));
+			));
 
 		return $createUser;
 	}

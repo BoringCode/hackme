@@ -6,6 +6,8 @@ if ($auth->logged_in) {
 	header("Location: members.php");
 }
 
+$nonce = new Nonce("login_action");
+
 require("_inc/header.php");
 ?>
 
@@ -22,6 +24,7 @@ require("_inc/header.php");
 						<tr> <td> Password </td> <td> <input type="password" name="password" /> </td>  
 	                    <td> <input type="submit" name = "submit" value="Login" /> </td></tr>
 					</table>
+					<input type="hidden" name="nonce" value="<?php echo $nonce->get(); ?>">
 				</form>					
 				<hr style=\"color:#000033\" />					
 				<p></p><p>If you are not a member yet, please click <a href="register.php">here</a> to register.</p>

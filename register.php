@@ -6,7 +6,13 @@ if ($auth->logged_in) {
     header("Location: members.php");
 }
 
+$nonce = new Nonce("register_action");
+
 if (isset($_POST['submit'])) {
+
+    if (!isset($_POST["nonce"]) || !$nonce->verify($_POST["nonce"])) {
+        die("CSRF detected, knock it off you punk");
+    }
     
     if(!isset($_POST['uname']) || !isset($_POST['password']) || !isset($_POST['fname']) || !isset($_POST['lname'])) {
         die('<p>You did not fill in a required field.
@@ -60,6 +66,7 @@ require("_inc/header.php");
                     <td> <input type="submit" name="submit" value="Register" /> </td>
                 </tr>
             </table>
+            <input type="hidden" name="nonce" value="<?php echo $nonce->get(); ?>">
             </form>
         <?php endif; ?>
         </div>

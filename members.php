@@ -4,7 +4,11 @@ define("MEMBERS_ONLY", true);
 require("_inc/functions.php");
 
 //if the login form is submitted 
-if (isset($_POST['submit']) && isset($_POST["password"]) && isset($_POST["username"])) {
+if (isset($_POST['submit']) && isset($_POST["password"]) && isset($_POST["username"]) && isset($_POST["nonce"])) {
+	$nonce = new Nonce("login_action");
+	if (!$nonce->verify($_POST["nonce"])) {
+		die("CSRF detected, knock it off you punk");
+	}
 	$auth->login($_POST["username"], $_POST["password"]);
 }
 
