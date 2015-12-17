@@ -1,6 +1,6 @@
 #Hackme
 
-Welcome to hackme, an information security exercise for COS342 (Fall 2015) at Taylor University.
+Welcome to hackme, an information security exercise for COS342 (Information Security) at Taylor University in Fall 2015.
 
 For this project, I was given some dangerously bad code and instructed to fix it as well as do a writeup on what types of attacks would be possible with this code.
 
