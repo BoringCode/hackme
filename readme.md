@@ -1,4 +1,4 @@
-#Hackme
+# Hackme
 
 Welcome to hackme, an information security exercise for COS342 (Information Security) at Taylor University in Fall 2015.
 
@@ -8,7 +8,7 @@ You can see how the system initially looked in the very first commit. A comparis
 
 Please be warned that this **is not production code** and should only be used as an exercise in securing a web application. I may have missed stuff, and there are certainly some code style things I would like to fix (if I had time.)
 
-##Writeup
+## Writeup
 
 You can read the writeup in [project-essay.md](project-essay.md) and [project-essay-part-2.md](project-essay-part-2.md).
 
